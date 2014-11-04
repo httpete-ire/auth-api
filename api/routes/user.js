@@ -8,24 +8,53 @@ module.exports = function(router) {
     router
 
     /**
-     * Return all users
+     * find all users
      */
     .get('/user', function(req, res){
-        res.json({
-            'hello world': true
+
+        User.find({},function(err, users){
+            if(err || !users) {
+                res.send(301);
+            }
+
+            res.json(users);
         });
     })
 
     /**
-     * creates a user in the system
+     * find user by ID
+     */
+    .get('/user/:userid', function(req, res){
+        // id of user
+        var id = req.params.userid;
+
+        // get a user based on id
+        User.findOne({_id: id}, function(err, user){
+
+            if(err || !user){
+                res.send(301);
+            }
+
+            res.json(user);
+        });
+    })
+
+    /**
+     * create a user in the system
      * @param  {Object} req : Request object
      * @param  {Object} res : Response object
      */
     .post('/user', function(req, res){
 
-        var user = new User();
+        // ensure email and password is set
+        if(!req.body.email || !req.body.password) {
+            var msg = 'email and password must be provided';
+            res.send(406, {
+                err: msg
+            });
+        }
 
-        console.log(req.body);
+        var user = new User();
 
         user.email = req.body.email;
 
