@@ -27,12 +27,17 @@ module.exports = function(router) {
 
         console.log(req.body);
 
-        // user.email =
+        user.email = req.body.email;
 
+        user.password = req.body.password;
 
+        user.save(function(err){
+            if (err) {
+                return res.send(err);
+            }
 
-
-        res.json();
+            res.send(200);
+        });
     });
 
     return router;
