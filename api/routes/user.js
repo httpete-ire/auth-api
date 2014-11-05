@@ -1,5 +1,7 @@
 var User = require('./../models/user.js');
 
+var userHelper = require('./../helpers/user.js');
+
 module.exports = function(router) {
 
     /**
@@ -28,15 +30,14 @@ module.exports = function(router) {
         // id of user
         var id = req.params.userid;
 
-        // get a user based on id
-        User.findOne({_id: id}, function(err, user){
+        userHelper
+            .findUserById(id)
+            .then(function(user){
+                res.json(user);
+            }, function(err){
+                res.json(404,err);
+            });
 
-            if(err || !user){
-                res.send(301);
-            }
-
-            res.json(user);
-        });
     })
 
     /**
@@ -54,19 +55,47 @@ module.exports = function(router) {
             });
         }
 
-        var user = new User();
+        userHelper
+            .findUserByEmail(req.body.email)
+            .then(function(user){
+                // if a user excists with that email return a err msg
+                if(user){
 
-        user.email = req.body.email;
+                    res.send(401, {
+                        err: 'That email is taken'
+                    });
 
-        user.password = req.body.password;
+                }
 
-        user.save(function(err){
-            if (err) {
-                return res.send(err);
-            }
+            }, function(err){
 
-            res.send(200);
-        });
+                var user = new User();
+
+                user.email = req.body.email;
+
+                user.password = req.body.password;
+
+                user.save(function(err){
+                    if (err) {
+                        return res.send(err);
+                    }
+
+                    res.send(200);
+                });
+
+            });
+    })
+
+    .delete('/user/:userid', function(req, res){
+        var id = req.params.userid;
+        userHelper.deleteUser(id)
+            .then(function(deleted){
+                if(deleted) {
+                    res.json(200);
+                }
+            }, function(err) {
+                console.log(err);
+            });
     });
 
 
