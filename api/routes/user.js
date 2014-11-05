@@ -69,5 +69,7 @@ module.exports = function(router) {
         });
     });
 
+
+    // return the router object
     return router;
 };
