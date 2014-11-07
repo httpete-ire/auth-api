@@ -19,7 +19,7 @@
 
   				<!-- form -->
   				<!-- ng-controller="AddUser as addCtrl" -->
-	  				 <form name="addForm"  ng-submit="regCtrl.addUser(user)" role="form">
+	  				 <form name="addForm"  ng-submit="regCtrl.addUser(regCtrl.user)" role="form">
 	  					<div class="form-group">
 						    <label for="exampleInputEmail1">Username or Email</label>
 						    <input ng-model="regCtrl.user.email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">

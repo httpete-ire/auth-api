@@ -47,16 +47,16 @@ module.exports = function(router) {
      */
     .post('/user', function(req, res){
 
+        console.log(req.body);
+
         // ensure email and password is set
-        if(!req.body.user.email || !req.body.user.password) {
+        if(!req.body.email || !req.body.password) {
             var msg = 'email and password must be provided';
-            res.send(406, {
-                err: msg
-            });
+            es.sendStatus(406);
         }
 
         userHelper
-            .findUserByEmail(req.body.user.email)
+            .findUserByEmail(req.body.email)
             .then(function(user){
                 // if a user excists with that email return a err msg
                 if(user){
@@ -71,9 +71,9 @@ module.exports = function(router) {
 
                 var user = new User();
 
-                user.email = req.body.user.email;
+                user.email = req.body.email;
 
-                user.password = req.body.user.password;
+                user.password = req.body.password;
 
                 user.save(function(err){
                     if (err) {
